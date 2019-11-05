@@ -1,0 +1,53 @@
+/// SENSOR ULTRASSOM TEM QUE TA NO PLUG 1
+/// SENSOR DE COR    TEM QUE TA NO PLUG 2
+
+#define SENSOR_TYPE_COLORFULL IN_TYPE_COLORFULL
+#define ULTRASOM 1   /// SENSOR ULTRASONICO
+#define SENSOR_RGB 2 /// SENSOR RGB
+#define OUT_L OUT_A  /// MOTOR ESQUERDO
+#define OUT_R OUT_B  /// MOTOR DIREITO
+
+/*
+task slowR(int degrees){
+    RotateMotor(OUT_L,10,degrees);
+}
+
+task slowL(int degrees){
+    RotateMotor(OUT_R,10,degrees);
+}
+*/
+void turnRight(int degrees){
+    RotateMotor(OUT_L,100,degrees);
+}
+
+void turnLeft(int degrees){
+    RotateMotor(OUT_R,100,degrees);
+}
+
+void pushBack(){
+    RotateMotor(OUT_L,10,-90);
+    RotateMotor(OUT_R,10,-90);
+}
+
+task main(){
+    int distance;
+    SetSensorUltrasonic(ULTRASOM);
+    SetSensor(SENSOR_RGB,SENSOR_TYPE_COLORFULL);
+    SetSensorLowspeed(ULTRASOM);
+    SetSensorLowspeed(SENSOR_RGB);
+    
+    while(true){
+        distance = SensorUS(ULTRASOM);
+        if (distance < 1)
+           turnLeft(90);
+        else if( distance < 50 ){
+            RotateMotor(OUT_L,10,45);
+            RotateMotor(OUT_R,10,45);
+            }
+        else{
+             RotateMotor(OUT_L,100,45);
+             RotateMotor(OUT_R,100,45);
+        }
+    }
+}
+
