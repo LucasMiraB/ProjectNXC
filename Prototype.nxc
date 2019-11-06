@@ -7,26 +7,27 @@
 #define OUT_L OUT_A  /// MOTOR ESQUERDO
 #define OUT_R OUT_B  /// MOTOR DIREITO
 
-/*
-task slowR(int degrees){
-    RotateMotor(OUT_L,10,degrees);
-}
 
-task slowL(int degrees){
-    RotateMotor(OUT_R,10,degrees);
+/*
+task rotate(int degrees){
+    RotateMotor(OUT_L,90,degrees);
+    RotateMotor(OUT_R,90,-degrees);
 }
 */
-void turnRight(int degrees){
-    RotateMotor(OUT_L,100,degrees);
-}
 
-void turnLeft(int degrees){
-    RotateMotor(OUT_R,100,degrees);
+void turn(){
+    RotateMotor(OUT_AB,90,-100,true,true);
 }
 
 void pushBack(){
     RotateMotor(OUT_L,10,-90);
     RotateMotor(OUT_R,10,-90);
+}
+
+void pushForward(int power){
+     RotateMotorEx(OUT_AB, power, 900, 50, true, false);
+     /// Motor das portas AB, 75 de força, 360º de rotação, 50 é turn ratio
+     /// true é sincronia, false é se para após o movimento
 }
 
 task main(){
@@ -35,19 +36,17 @@ task main(){
     SetSensor(SENSOR_RGB,SENSOR_TYPE_COLORFULL);
     SetSensorLowspeed(ULTRASOM);
     SetSensorLowspeed(SENSOR_RGB);
-    
+    pushForward(90);
+
     while(true){
+        /// sensor retorna distancia de 0 a 255 em cm
         distance = SensorUS(ULTRASOM);
-        if (distance < 1)
-           turnLeft(90);
-        else if( distance < 50 ){
-            RotateMotor(OUT_L,10,45);
-            RotateMotor(OUT_R,10,45);
-            }
-        else{
-             RotateMotor(OUT_L,100,45);
-             RotateMotor(OUT_R,100,45);
-        }
+        if( distance < 10 )
+            pushForward(20);
+        else if(distance < 60)
+             pushForward(90);
+        else
+             turn(360);
     }
 }
 
